@@ -7,11 +7,12 @@
 
 A comprehensive disaster management and emergency response platform supporting multiple disaster types (floods, earthquakes, fires, hurricanes, tsunamis). Built with ASP.NET Core 8.0, ML.NET, SignalR for real-time communications, and IoT sensor integration.
 
-## 🎓 Academic Project
+## 🎓 Project Background
 
-**Institution:** Babcock University  
-**Course:** Computer Science Final Year Project  
-**Academic Year:** 2023  
+This started as my 2023 Babcock University Computer Science final-year project, a flood management system for Lagos local government areas. In late 2025 I extended it into a multi-disaster platform, adding shelter management, IoT sensor monitoring, multi-channel alerts (SMS, USSD, WhatsApp, voice) and analytics.
+
+**Original project:** Babcock University, Computer Science Final Year Project (2023)  
+**Extended:** November 2025 to January 2026  
 **Status:** In Development
 
 ---
@@ -410,7 +411,7 @@ docker run -d -p 8080:8080 \
 
 ## 🤝 Contributing
 
-This is an academic project. Contributions, suggestions, and feedback are welcome!
+This is a personal project that began as academic work. Contributions, suggestions, and feedback are welcome!
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
@@ -428,8 +429,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- **Babcock University** - Computer Science Department
-- **Project Supervisor** - [Supervisor Name]
+- **Babcock University** - Computer Science Department, where the original project began
 - **Twilio** - Communication APIs
 - **Firebase** - Push notification infrastructure
 - **Microsoft** - .NET platform and Azure services
@@ -439,9 +439,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact
 
-**Project Team:** Babcock University Computer Science Department  
-**Institution:** Babcock University, Ilishan-Remo, Ogun State, Nigeria  
-**Academic Year:** 2023
+**Author:** Ebenezer Doutimiwei ([@Karinateii](https://github.com/Karinateii))  
+**Original project:** Babcock University, Ilishan-Remo, Ogun State, Nigeria (2023)
 
 **Repository:** [https://github.com/Karinateii/FloodManagementSystem](https://github.com/Karinateii/FloodManagementSystem)
 
