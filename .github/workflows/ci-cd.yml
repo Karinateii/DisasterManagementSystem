@@ -141,6 +141,9 @@ jobs:
   security-scan:
     runs-on: ubuntu-latest
     needs: docker-build
+    permissions:
+      contents: read
+      security-events: write
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     
     steps:
