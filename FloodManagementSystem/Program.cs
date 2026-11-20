@@ -238,6 +238,9 @@ try
         {
             // Seed SMS templates
             var context = services.GetRequiredService<DisasterDbContext>();
+
+            // The migrations target SQL Server, so build the SQLite schema straight from the model
+            await context.Database.EnsureCreatedAsync();
             var logger = services.GetRequiredService<ILogger<SmsTemplateSeeder>>();
             var seeder = new SmsTemplateSeeder(context, logger);
             await seeder.SeedAsync();

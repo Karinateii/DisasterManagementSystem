@@ -360,4 +360,10 @@ MigrationBackup/
 .ionide/
 
 # Fody - auto-generated XML schema
-FodyWeavers.xsd*.db
+FodyWeavers.xsd
+
+# Local SQLite database and editor caches
+*.db
+*.db-shm
+*.db-wal
+*.lscache
