@@ -80,6 +80,12 @@ docker-compose up -d
 
 Deployment notes are in [DEPLOYMENT.md](DEPLOYMENT.md).
 
+Tests (xUnit, 24 tests) run on every push through GitHub Actions:
+
+```bash
+dotnet test FloodManagementSystem.Tests
+```
+
 ## API overview
 
 | Area | Examples |
@@ -101,7 +107,6 @@ Still to do:
 - Mobile apps
 - Evacuation route planning
 - More training data for the prediction model
-- The test project in `FloodManagementSystem.Tests` is out of date with the current models and needs updating
 
 ## License
 

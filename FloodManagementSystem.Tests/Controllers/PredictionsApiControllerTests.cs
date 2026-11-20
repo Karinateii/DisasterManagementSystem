@@ -56,7 +56,7 @@ namespace GlobalDisasterManagement.Tests.Controllers
         }
 
         [Fact]
-        public async Task GetPredictionById_WithValidId_ShouldReturnOk()
+        public async Task GetPrediction_WithValidId_ShouldReturnOk()
         {
             // Arrange
             var prediction = new CityFloodPrediction
@@ -73,7 +73,7 @@ namespace GlobalDisasterManagement.Tests.Controllers
                 .ReturnsAsync(prediction);
 
             // Act
-            var result = await _controller.GetPredictionById(1);
+            var result = await _controller.GetPrediction(1);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
@@ -82,14 +82,14 @@ namespace GlobalDisasterManagement.Tests.Controllers
         }
 
         [Fact]
-        public async Task GetPredictionById_WithInvalidId_ShouldReturnNotFound()
+        public async Task GetPrediction_WithInvalidId_ShouldReturnNotFound()
         {
             // Arrange
             _mockUnitOfWork.Setup(u => u.CityPredictions.GetByIdAsync(999))
                 .ReturnsAsync((CityFloodPrediction?)null);
 
             // Act
-            var result = await _controller.GetPredictionById(999);
+            var result = await _controller.GetPrediction(999);
 
             // Assert
             Assert.IsType<NotFoundObjectResult>(result.Result);
@@ -106,6 +106,8 @@ namespace GlobalDisasterManagement.Tests.Controllers
                 new CityFloodPrediction { Id = 2, CityId = 1, City = "Lagos Island", Prediction = "False" }
             };
 
+            _mockUnitOfWork.Setup(u => u.Cities.GetByIdAsync(cityId))
+                .ReturnsAsync(new City { Id = cityId, Name = "Lagos Island" });
             _mockUnitOfWork.Setup(u => u.CityPredictions.FindAsync(It.IsAny<System.Linq.Expressions.Expression<Func<CityFloodPrediction, bool>>>()))
                 .ReturnsAsync(predictions);
 
@@ -114,8 +116,10 @@ namespace GlobalDisasterManagement.Tests.Controllers
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
-            var returnedPredictions = Assert.IsAssignableFrom<IEnumerable<CityFloodPrediction>>(okResult.Value);
+            var returnedPredictions = Assert.IsAssignableFrom<IEnumerable<CityFloodPrediction>>(GetProperty(okResult.Value, "predictions"));
             Assert.Equal(2, returnedPredictions.Count());
+            Assert.Equal("Lagos Island", GetProperty(okResult.Value, "cityName"));
+            Assert.Equal(1, GetProperty(okResult.Value, "highRiskCount"));
         }
 
         [Fact]
@@ -163,8 +167,13 @@ namespace GlobalDisasterManagement.Tests.Controllers
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
-            var returnedPredictions = Assert.IsAssignableFrom<IEnumerable<CityFloodPrediction>>(okResult.Value);
+            var returnedPredictions = Assert.IsAssignableFrom<IEnumerable<CityFloodPrediction>>(GetProperty(okResult.Value, "predictions"));
             Assert.Equal(2, returnedPredictions.Count());
+            Assert.Equal(year.ToString(), GetProperty(okResult.Value, "year"));
         }
+
+        // The endpoints return an anonymous wrapper object, so read its fields by name
+        private static object? GetProperty(object? value, string name) =>
+            value?.GetType().GetProperty(name)?.GetValue(value);
     }
 }

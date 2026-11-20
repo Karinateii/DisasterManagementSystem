@@ -3,6 +3,8 @@ using Microsoft.Extensions.Options;
 using GlobalDisasterManagement.Models.Configuration;
 using GlobalDisasterManagement.Services.Implementations;
 using System.Net.Mail;
+using GlobalDisasterManagement.Resources;
+using Microsoft.Extensions.Localization;
 
 namespace GlobalDisasterManagement.Tests.Services
 {
@@ -24,12 +26,11 @@ namespace GlobalDisasterManagement.Tests.Services
                 SmtpPort = 587,
                 SenderEmail = "test@example.com",
                 SenderPassword = "testpassword",
-                SenderName = "Test System",
                 EnableSsl = true
             };
 
             var options = Options.Create(_emailSettings);
-            _emailService = new EmailService(_mockUnitOfWork.Object, options, _mockLogger.Object);
+            _emailService = new EmailService(options, _mockLogger.Object, _mockUnitOfWork.Object, new Mock<IStringLocalizer<SharedResources>>().Object);
         }
 
         [Fact]
@@ -50,24 +51,21 @@ namespace GlobalDisasterManagement.Tests.Services
             var user = new User
             {
                 Id = "user123",
-                FirstName = "John",
-                LastName = "Doe",
+                UserName = "john.doe",
                 Email = "john.doe@example.com"
             };
 
-            _mockUnitOfWork.Setup(u => u.Users.GetByIdAsync("user123"))
-                .ReturnsAsync(user);
+            _mockUnitOfWork.Setup(u => u.Users.FindAsync(It.IsAny<System.Linq.Expressions.Expression<Func<User, bool>>>()))
+                .ReturnsAsync(new List<User> { user });
 
             // Act
-            // Note: We can't actually send emails in tests without mocking SmtpClient
-            // This test verifies the repository call
-            var userFromRepo = await _mockUnitOfWork.Object.Users.GetByIdAsync("user123");
+            var found = await _mockUnitOfWork.Object.Users.FindAsync(u => u.Id == "user123");
 
             // Assert
-            Assert.NotNull(userFromRepo);
-            Assert.Equal("John", userFromRepo.FirstName);
-            Assert.Equal("Doe", userFromRepo.LastName);
-            _mockUnitOfWork.Verify(u => u.Users.GetByIdAsync("user123"), Times.Once);
+            var userFromRepo = Assert.Single(found);
+            Assert.Equal("john.doe", userFromRepo.UserName);
+            Assert.Equal("john.doe@example.com", userFromRepo.Email);
+            _mockUnitOfWork.Verify(u => u.Users.FindAsync(It.IsAny<System.Linq.Expressions.Expression<Func<User, bool>>>()), Times.Once);
         }
 
         [Fact]
@@ -76,8 +74,8 @@ namespace GlobalDisasterManagement.Tests.Services
             // Arrange
             var users = new List<User>
             {
-                new User { Email = "user1@example.com", FirstName = "User1" },
-                new User { Email = "user2@example.com", FirstName = "User2" }
+                new User { Email = "user1@example.com", UserName = "User1" },
+                new User { Email = "user2@example.com", UserName = "User2" }
             };
 
             _mockUnitOfWork.Setup(u => u.Users.GetAllAsync())

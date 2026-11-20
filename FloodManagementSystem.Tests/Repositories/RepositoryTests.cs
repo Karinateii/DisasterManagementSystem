@@ -116,7 +116,7 @@ namespace GlobalDisasterManagement.Tests.Repositories
         }
 
         [Fact]
-        public async Task DeleteAsync_ShouldRemoveEntity()
+        public async Task Remove_ShouldDeleteEntity()
         {
             // Arrange
             using var context = CreateInMemoryContext();
@@ -127,7 +127,7 @@ namespace GlobalDisasterManagement.Tests.Repositories
             await context.SaveChangesAsync();
 
             // Act
-            repository.Delete(city);
+            repository.Remove(city);
             await context.SaveChangesAsync();
 
             // Assert
